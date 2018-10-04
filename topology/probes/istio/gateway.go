@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 IBM Corp.
+ * Copyright (C) 2018 IBM, Inc.
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,42 +19,28 @@
  * under the License.
  *
  */
-
 package istio
 
 import (
+	"fmt"
 	kiali "github.com/kiali/kiali/kubernetes"
-
-	"github.com/skydive-project/skydive/config"
 	"github.com/skydive-project/skydive/topology/graph"
 	"github.com/skydive-project/skydive/topology/probes/k8s"
 )
 
-const ClusterName = "cluster"
+type gatewayHandler struct{}
 
-// Probe describes the Istio probe in charge of importing
-// Istio resources into the graph
-type Probe struct {
-	*k8s.Probe
+func (h *gatewayHandler) IsTopLevel() bool {
+	return true
 }
-
-// NewIstioProbe creates the probe for tracking istio events
-func NewIstioProbe(g *graph.Graph) (*k8s.Probe, error) {
-	configFile := config.GetString("analyzer.topology.istio.config_file")
-	config, err := k8s.NewConfig(configFile)
-	if err != nil {
-		return nil, err
-	}
-
-	client, err := kiali.NewClientFromConfig(config)
-	if err != nil {
-		return nil, err
-	}
-
-	subprobes := map[string]k8s.Subprobe{
-		"destinationrule": newDestinationRuleProbe(client, g),
-		"gateway": newGatewayProbe(client, g),
-	}
-
-	return k8s.NewProbe("istio", ClusterName, g, subprobes, nil)
+func (h *gatewayHandler) Map(obj interface{}) (graph.Identifier, graph.Metadata) {
+	dr := obj.(*kiali.Gateway)
+	return graph.Identifier(dr.GetUID()), newMetadata("gateway", dr.Namespace, dr.Name, dr)
+}
+func (h *gatewayHandler) Dump(obj interface{}) string {
+	dr := obj.(*kiali.Gateway)
+	return fmt.Sprintf("gateway{Namespace: %s, Name: %s}", dr.Namespace, dr.Name)
+}
+func newGatewayProbe(client *kiali.IstioClient, g *graph.Graph) k8s.Subprobe {
+	return k8s.NewResourceCache(client.GetIstioNetworkingApi(), &kiali.Gateway{}, "gateways", g, &gatewayHandler{})
 }

@@ -147,6 +147,7 @@ analyzer:
       # on production systems
       probes:
       - destinationrule
+      - gateway
 
   replication:
     # debug: false
