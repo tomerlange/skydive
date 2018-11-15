@@ -145,15 +145,8 @@ ifeq ($(WITH_MUTEX_DEBUG), true)
   BUILD_TAGS+=mutexdebug
 endif
 
-ifeq ($(WITH_K8S), true)
-  BUILD_TAGS+=k8s
-  EXTRA_ARGS+=-analyzer.topology.probes=k8s
-endif
-
-ifeq ($(WITH_ISTIO), true)
-  BUILD_TAGS+=k8s istio
-  EXTRA_ARGS+=-analyzer.topology.probes=k8s,istio
-endif
+BUILD_TAGS+=k8s istio
+EXTRA_ARGS+=-analyzer.topology.probes=k8s,istio
 
 ifeq ($(WITH_HELM), true)
   BUILD_TAGS+=helm
@@ -173,10 +166,6 @@ endif
 
 ifeq ($(WITH_LXD), true)
   BUILD_TAGS+=lxd
-endif
-
-ifeq ($(WITH_LIBVIRT), true)
-  BUILD_TAGS+=libvirt
 endif
 
 STATIC_LIBS_ABS := $(addprefix $(STATIC_DIR)/,$(STATIC_LIBS))
