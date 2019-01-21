@@ -116,13 +116,13 @@ circle.emphasized  {
 }
 
 .links path.k8s {
-  stroke: rgb(33, 97, 140);
+  stroke: rgb(153, 102, 255);
   stroke-width: 1.5;
   opacity: 0.8;
 }
 
 .links path.istio {
-  stroke: rgb(93, 109, 126);
+  stroke: rgb(255, 153, 0);
   stroke-width: 1.5;
   opacity: 0.8;
 }

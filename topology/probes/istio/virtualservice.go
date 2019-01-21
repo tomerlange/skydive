@@ -54,6 +54,7 @@ func newVirtualServiceProbe(client interface{}, g *graph.Graph) k8s.Subprobe {
 }
 
 type virtualServiceSpec struct {
+	Gateways []string `mapstructure:"gateways"`
 	HTTP []struct {
 		Route []struct {
 			Destination struct {

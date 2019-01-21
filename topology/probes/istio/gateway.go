@@ -26,7 +26,9 @@ import (
 	"fmt"
 
 	kiali "github.com/kiali/kiali/kubernetes"
+	"github.com/mitchellh/mapstructure"
 	"github.com/skydive-project/skydive/graffiti/graph"
+	"github.com/skydive-project/skydive/probe"
 	"github.com/skydive-project/skydive/topology/probes/k8s"
 )
 
@@ -49,3 +51,23 @@ func (h *gatewayHandler) Dump(obj interface{}) string {
 func newGatewayProbe(client interface{}, g *graph.Graph) k8s.Subprobe {
 	return k8s.NewResourceCache(client.(*kiali.IstioClient).GetIstioNetworkingApi(), &kiali.Gateway{}, "gateways", g, &gatewayHandler{})
 }
+
+func gatewayVirtualServiceAreLinked(a, b interface{}) bool {
+	gateway := a.(*kiali.Gateway)
+        vs := b.(*kiali.VirtualService)
+        vsSpec := &virtualServiceSpec{}
+        if err := mapstructure.Decode(vs.Spec, vsSpec); err != nil {
+                return false
+        }
+	for _, vsGateway := range vsSpec.Gateways {
+		if vsGateway == gateway.Name {
+			return true
+		}
+	}
+        return false
+}
+
+func newGatewayVirtualServiceLinker(g *graph.Graph) probe.Probe {
+        return k8s.NewABLinker(g, Manager, "gateway", Manager, "virtualservice", gatewayVirtualServiceAreLinked)
+}
+
