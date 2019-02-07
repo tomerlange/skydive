@@ -71,6 +71,10 @@ func ingressServiceAreLinked(a, b interface{}) bool {
 	return false
 }
 
+func ingressServiceMetadata(a, b interface{}, typeA, typeB, manager string) graph.Metadata {
+        return NewEdgeMetadata(manager, typeA)
+}
+
 func newIngressServiceLinker(g *graph.Graph) probe.Probe {
-	return NewABLinker(g, Manager, "ingress", Manager, "service", ingressServiceAreLinked)
+	return NewABLinker(g, Manager, "ingress", Manager, "service", ingressServiceMetadata, ingressServiceAreLinked)
 }

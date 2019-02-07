@@ -60,6 +60,10 @@ func statefulSetPodAreLinked(a, b interface{}) bool {
 	return matchLabelSelector(b.(*v1.Pod), a.(*v1beta1.StatefulSet).Spec.Selector)
 }
 
+func statefuleSetPodMetadata(a, b interface{}, typeA, typeB, manager string) graph.Metadata {
+        return NewEdgeMetadata(manager, typeA)
+}
+
 func newStatefulSetPodLinker(g *graph.Graph) probe.Probe {
-	return NewABLinker(g, Manager, "statefulset", Manager, "pod", statefulSetPodAreLinked)
+	return NewABLinker(g, Manager, "statefulset", Manager, "pod", statefuleSetPodMetadata, statefulSetPodAreLinked)
 }

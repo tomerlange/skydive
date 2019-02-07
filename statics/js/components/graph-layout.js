@@ -222,10 +222,44 @@ var LinkLabelLatency = Vue.extend({
   },
 });
 
+var LinkLabelWeight = Vue.extend({
+  mixins: [apiMixin],
+
+  methods: {
+    setup: function(topology) {
+      this.topology = topology;
+    },
+
+    updateData: function(link) {
+      return;
+    },
+
+    hasData: function(link) {
+      return true;
+    },
+
+    getText: function(link) {
+      return `wowowowowow`;
+    },
+
+    isActive: function(link) {
+      return true;
+    },
+
+    isWarning: function(link) {
+      return false;
+    },
+
+    isAlert: function(link) {
+      return false;
+    },
+  },
+});
+
 var TopologyGraphLayout = function(vm, selector) {
   var self = this;
 
-  this.linkLabelType = "bandwidth";
+  this.linkLabelType = "weight";
 
   this.vm = vm;
 
@@ -310,7 +344,7 @@ var TopologyGraphLayout = function(vm, selector) {
     let id = "arrowhead-"+label;
     defsMarker(id, marker_refX, marker_refY, marker_black, marker_arrow);
   }
- 
+
   networkpolicyMarker("ingress", "deny", "begin");
   networkpolicyMarker("ingress", "deny", "end");
   networkpolicyMarker("ingress", "allow", "begin");
@@ -346,10 +380,14 @@ var TopologyGraphLayout = function(vm, selector) {
 };
 
 TopologyGraphLayout.prototype = {
-
+  
   linkLabelFactory: function(link) {
     let type, driver;
     switch (this.linkLabelType) {
+      case "weight":
+        type = "weight";
+        driver = new LinkLabelWeight();
+        break;
       case "latency":
         type = "latency";
         driver = new LinkLabelLatency();

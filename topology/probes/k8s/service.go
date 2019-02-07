@@ -57,14 +57,22 @@ func servicePodAreLinked(a, b interface{}) bool {
 	return matchMapSelector(b.(*v1.Pod), a.(*v1.Service).Spec.Selector)
 }
 
+func servicePodMetadata(a, b interface{}, typeA, typeB, manager string) graph.Metadata {
+	return NewEdgeMetadata(manager, typeA)
+}
+
 func newServicePodLinker(g *graph.Graph) probe.Probe {
-	return NewABLinker(g, Manager, "service", Manager, "pod", servicePodAreLinked)
+	return NewABLinker(g, Manager, "service", Manager, "pod", servicePodMetadata, servicePodAreLinked)
 }
 
 func serviceEndpointsAreLinked(a, b interface{}) bool {
 	return matchMapSelector(b.(*v1.Endpoints), a.(*v1.Service).Spec.Selector)
 }
 
+func serviceEndpointsMetadata(a, b interface{}, typeA, typeB, manager string) graph.Metadata {
+        return NewEdgeMetadata(manager, typeA)
+}
+
 func newServiceEndpointsLinker(g *graph.Graph) probe.Probe {
-	return NewABLinker(g, Manager, "service", Manager, "endpoints", serviceEndpointsAreLinked)
+	return NewABLinker(g, Manager, "service", Manager, "endpoints", serviceEndpointsMetadata, serviceEndpointsAreLinked)
 }

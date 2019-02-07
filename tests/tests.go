@@ -81,8 +81,8 @@ agent:
       - netns
       - ovsdb
       - docker
-      - lxd
-      - opencontrail
+      # - lxd
+      # - opencontrail
       - lldp
       - runc
     netlink:

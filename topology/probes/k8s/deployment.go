@@ -57,14 +57,22 @@ func deploymentPodAreLinked(a, b interface{}) bool {
 	return matchLabelSelector(b.(*v1.Pod), a.(*v1beta1.Deployment).Spec.Selector)
 }
 
+func deploymentPodMetadata(a, b interface{}, typeA, typeB, manager string) graph.Metadata {
+        return NewEdgeMetadata(manager, typeA)
+}
+
 func newDeploymentPodLinker(g *graph.Graph) probe.Probe {
-	return NewABLinker(g, Manager, "deployment", Manager, "pod", deploymentPodAreLinked)
+	return NewABLinker(g, Manager, "deployment", Manager, "pod", deploymentPodMetadata, deploymentPodAreLinked)
 }
 
 func deploymentReplicaSetAreLinked(a, b interface{}) bool {
 	return matchLabelSelector(b.(*v1beta1.ReplicaSet), a.(*v1beta1.Deployment).Spec.Selector)
 }
 
+func deploymentReplicasetMetadata(a, b interface{}, typeA, typeB, manager string) graph.Metadata {
+        return NewEdgeMetadata(manager, typeA)
+}
+
 func newDeploymentReplicaSetLinker(g *graph.Graph) probe.Probe {
-	return NewABLinker(g, Manager, "deployment", Manager, "replicaset", deploymentReplicaSetAreLinked)
+	return NewABLinker(g, Manager, "deployment", Manager, "replicaset", deploymentReplicasetMetadata, deploymentReplicaSetAreLinked)
 }
