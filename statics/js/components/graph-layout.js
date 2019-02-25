@@ -313,7 +313,7 @@ var TopologyGraphLayout = function(vm, selector) {
 
   var kubeDefaultMarker = function(label) {
     let id = "arrowhead-"+label;
-    defsMarker(id, marker_refX, marker_refY, marker_black, marker_arrow);
+    defsMarker(id, marker_refX, marker_refY, marker_red, marker_arrow);
   }
 
   networkpolicyMarker("ingress", "deny", "begin");
@@ -1494,7 +1494,7 @@ TopologyGraphLayout.prototype = {
 
       driver.updateData(link);
 
-      if (driver.hasData(link)) {
+      if (true) {
         this.linkLabelData[link.id] = {
           id: "link-label-" + link.id,
           link: link,
@@ -1637,7 +1637,7 @@ TopologyGraphLayout.prototype = {
         return self.nodeSize(d) * 1.6;
       })
       .attr("dy", 10)
-      .text(this.nodeTitle);
+      .text(`wowowowowowoow`);
 
     nodeEnter.filter(function(d) { return d.isGroupOwner(); })
       .each(this.groupOwnerSet.bind(this));
