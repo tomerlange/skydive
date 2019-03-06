@@ -81,7 +81,7 @@ agent:
       - netns
       - ovsdb
       - docker
-      - lxd
+      # - lxd
       - lldp
       - runc
       - socketinfo
