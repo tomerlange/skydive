@@ -675,6 +675,9 @@ var TopologyComponent = {
       if (self.isIstioEnabled()) {
         self.addFilterIstioTypes(filter, "network", ["cluster", "container", "namespace", "pod", "virtualservice", "gateway"]);
         self.addFilterIstioTypes(highlight, "network", ["pod", "virtualservice", "gateway"]);
+        self.addFilterIstioTypes(highlight, "pod", ["pod"]);
+	self.addFilterIstioTypes(highlight, "virtualservice", ["virtualservice"]);
+	self.addFilterIstioTypes(highlight, "gateway", ["gateway"]);
       }
 
       var default_filter = app.getConfigValue('topology.default_filter');
